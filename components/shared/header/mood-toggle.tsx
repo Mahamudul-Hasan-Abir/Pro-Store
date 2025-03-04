@@ -21,7 +21,7 @@ const ModeToggle = () => {
     setMounted(true);
   }, []);
   if (!mounted) {
-    return null;
+    return <DropdownMenuLabel>Appearance</DropdownMenuLabel>;
   }
 
   return (
