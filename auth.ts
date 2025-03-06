@@ -55,12 +55,34 @@ export const config = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async session({ session, user, trigger, token }: any) {
       session.user.id = token.sub;
+      session.user.role = token.role;
+      session.user.name = token.name;
+
       //   if there is an update,set the user name
 
       if (trigger === "update") {
         session.user.name = user.name;
       }
       return session;
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    async jwt({ token, user }: any) {
+      // Assign User field in the token
+      if (user) {
+        token.role = user.role;
+        // If user has no name then user the emails first part
+
+        if (user.name === "NO_NAME") {
+          token.name = user.email!.split("@")[0];
+
+          // Udate database to reflect the token name
+          await prisma.user.update({
+            where: { id: user.id },
+            data: { name: token.name },
+          });
+        }
+      }
+      return token;
     },
   },
   secret: process.env.NEXTAUTH_SECRECT,

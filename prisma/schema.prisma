@@ -38,7 +38,7 @@ model User {
   emailVerified DateTime? @db.Timestamp(6)
   password      String?
   role          String    @default("user")
-  address       Json      @db.Json
+  address       Json?     @db.Json
   paymentMethod String?
   image         String?
   createdAt     DateTime  @default(now())
